@@ -1,0 +1,89 @@
+<!-- <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/4031_RC01/embed_loader.js"></script> 
+<script type="text/javascript"> 
+const searchItem = new URLSearchParams(window.location.search).get("q");
+trends.embed.renderExploreWidget("TIMESERIES", {
+"comparisonItem":[{"keyword":searchItem,"geo":"PK","time":"today 12-m"}],
+"category":0,"property":""}, 
+{"exploreQuery": `geo=PK&q=${searchItem}&hl=en&date=today 12-m`,"guestPath":"https://trends.google.com:443/trends/embed/"}
+); 
+</script> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Trends - Line + Geo Chart</title>
+  <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/4031_RC01/embed_loader.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2, h3 {
+      margin-top: 40px;
+    }
+    .chart-container {
+      margin-bottom: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📊 Google Trends for "<span id="keyword-label">AI</span>"</h2>
+
+  <div class="chart-container">
+    <h3>📈 Interest Over Time</h3>
+    <div id="line-chart"></div>
+  </div>
+
+  <div class="chart-container">
+    <h3>🗺️ Region-wise Popularity in Pakistan</h3>
+    <div id="geo-chart"></div>
+  </div>
+
+  <script type="text/javascript">
+    const searchItem = new URLSearchParams(window.location.search).get("q") || "AI";
+    document.getElementById("keyword-label").innerText = searchItem;
+
+    // Line Chart
+    trends.embed.renderExploreWidget(
+      "TIMESERIES",
+      {
+        "comparisonItem": [{
+          "keyword": searchItem,
+          "geo": "PK",
+          "time": "today 12-m"
+        }],
+        "category": 0,
+        "property": ""
+      },
+      {
+        "exploreQuery": `geo=PK&q=${searchItem}&hl=en&date=today 12-m`,
+        "guestPath": "https://trends.google.com:443/trends/embed/"
+      }
+    );
+
+    // Geo Chart
+    trends.embed.renderExploreWidget(
+      "GEO_MAP",
+      {
+        "comparisonItem": [{
+          "keyword": searchItem,
+          "geo": "PK",
+          "time": "today 12-m"
+        }],
+        "category": 0,
+        "property": ""
+      },
+      {
+        "exploreQuery": `geo=PK&q=${searchItem}&hl=en&date=today 12-m`,
+        "guestPath": "https://trends.google.com:443/trends/embed/"
+      }
+    );
+  </script>
+
+</body>
+</html>
+
+
