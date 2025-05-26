@@ -1,7 +1,10 @@
 'use client'
-import { askGemini } from '@/graphql/gpt';
-import React, { useState, useRef } from 'react';
+import { askGemini, getQuestions } from '@/graphql/gpt';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import { useChatContext } from '@/context/Providers';
+import { useSession } from 'next-auth/react';
 
 interface Message {
   from: 'user' | 'ai';
@@ -13,8 +16,25 @@ const ChatComponent: React.FC = () => {
   const [input, setInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(false);
+  const chat = useChatContext();
+  const { data: session } = useSession();
+  const params = useParams()
+  const router = useRouter()
 
   const hasStarted = messages.length > 0;
+  useEffect(() => {
+    getQuestions(String(session?.user?.email), String(params.id)).then((data) => {
+      const _messages: Message[] = [];
+      for (const question of data) {
+        _messages.push({from: 'user', text: question.question});
+        _messages.push({from: 'ai', text: question.answer});
+      }
+      setMessages(_messages);
+      if(params.id == "new") {
+        chat.setUpdate(true);
+      }
+    });
+  }, [params.id])
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -25,12 +45,13 @@ const ChatComponent: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await askGemini(userMessage.text);
+      const response = await askGemini(String(session?.user?.email),userMessage.text, String(params.id));
       const aiMessage: Message = {
         from: 'ai',
-        text: response || "Sorry, I couldn't get a response."
+        text: response?.answer || "Sorry, I couldn't get a response."
       };
       setMessages((prev) => [...prev, aiMessage]);
+      router.push(`/gpt/${response?.chatId}`);
     } catch (error) {
       setMessages((prev) => [
         ...prev,

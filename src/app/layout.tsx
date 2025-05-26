@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CartProvider from "@/context/CartContext";
+import Providers from "@/context/Providers";
 
 
 
@@ -14,20 +15,20 @@ export const metadata: Metadata = {
 
 export const myMenu = [
   {
-    title:"Home",
-    url:'/'
+    title: "Home",
+    url: '/'
   },
   {
-    title:"Shop",
-    url:'/shop'
+    title: "Shop",
+    url: '/shop'
   },
   {
-    title:"About us",
-    url:'/about'
+    title: "About us",
+    url: '/about'
   },
   {
-    title:"Contact",
-    url:'/'
+    title: "Contact",
+    url: '/'
   },
 ]
 
@@ -43,11 +44,13 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
-        <CartProvider>
-        <Navbar logo="https://klbtheme.com/bevesi/wp-content/uploads/2024/03/logo-dark.png" menu={myMenu} />
-        {children}
-        <Footer/>
-        </CartProvider>
+        <Providers>
+          <CartProvider>
+            <Navbar logo="https://klbtheme.com/bevesi/wp-content/uploads/2024/03/logo-dark.png" menu={myMenu} />
+            {children}
+            <Footer />
+          </CartProvider>
+        </Providers>
       </body>
     </html>
   );

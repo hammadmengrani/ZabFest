@@ -13,7 +13,7 @@ interface GetQuestionsResponse {
 }
 
 interface GetChatsResponse {
-  getChats: Array<{ chat_id: string; email: string; topic:string }>;
+  getChats: Array<{ chatId: string; email: string; topic:string }>;
 }
 
 // **Query: Get All Chats**
@@ -120,4 +120,32 @@ export const renameChat = async (chatId: string, newTopic: string): Promise<bool
   }
 };
 
+export const ASK_GEMINI_MUTATION = `
+  mutation AskGemini($question: String!, $email: String!, $chatId: String!) {
+    askGemini(question: $question, email: $email, chatId: $chatId) {
+      answer
+      chatId
+      id
+    }
+  }
+`;
+
+interface AskGeminiResponse {
+  askGemini: {
+    answer: string;
+    chatId: string;
+    id: string;
+  };
+}
+
+export const askGemini = async (email: string, question: string, chatId: string): Promise<{answer: string, chatId: string, id: string} | null> => {
+  try {
+    const variables = { question, email, chatId };
+    const data = await client.request<AskGeminiResponse>(ASK_GEMINI_MUTATION, variables);
+    return data.askGemini;
+  } catch (error) {
+    console.error("❌ Error calling askGemini:", error);
+    return null;
+  }
+};
 

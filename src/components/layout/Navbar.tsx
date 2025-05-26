@@ -51,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({ logo, menu }) => {
           </div>
           <Menubar menuItems={menu} />
           <div className="flex gap-3 items-center">
-            <a href="/" className="w-10 h-10 md:w-[45px] md:h-[45px] flex items-center justify-center">
+            <a href="/gpt/new" className="w-10 h-10 md:w-[45px] md:h-[45px] flex items-center justify-center">
               <img src="/search.svg" className="w-8 h-8" alt="Search" />
             </a>
             <button
